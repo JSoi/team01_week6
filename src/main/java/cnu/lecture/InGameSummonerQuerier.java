@@ -4,6 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+
+import week.ja.GameParticipantListener;
+import week.ja.InGameInfo;
+import week.ja.SummonerInfo;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -35,7 +40,7 @@ public class InGameSummonerQuerier{
     /* (non-Javadoc)
 	 * @see cnu.lecture.InGameSummonerQuerierInterface#queryGameKey(java.lang.String)
 	 */
-    public int queryGamesummonernumber(void){
+    public int queryGamesummonernumber(){
     	return summonerNumber;
     }
 	public String queryGameKey(String summonerName) throws IOException {
@@ -53,7 +58,7 @@ public class InGameSummonerQuerier{
         Gson inGameGson = new Gson();
         InGameInfo gameInfo = inGameGson.fromJson(new JsonReader(new InputStreamReader(inGameResponse.getEntity().getContent())), InGameInfo.class);
         
-        summonerNumber = gameInfo.length();
+        summonerNumber = gameInfo.getParticipants().length;
         
         Arrays.asList(gameInfo.getParticipants()).forEach((InGameInfo.Participant participant) -> {
             listener.player(participant.getSummonerName());

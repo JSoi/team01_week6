@@ -6,14 +6,17 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+
 import static org.mockito.Mock.*;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
@@ -27,11 +30,12 @@ public class InGameSummonerQuerierTest {
 
     @Before
     public void setup() {
-
-        final String apiKey = "8242f154-342d-4b86-9642-dfa78cdb9d9c";
+    	final String apiKey = "8242f154-342d-4b86-9642-dfa78cdb9d9c";
         GameParticipantListener dontCareListener = mock(GameParticipantListener.class);
-        querier = new InGameSummonerQuerier();
-        querier = mock(InGameSummonerQuerier.class)
+
+        querier = new InGameSummonerQuerier(apiKey, dontCareListener);
+
+        querier = mock(InGameSummonerQuerier.class);
     }
 
     
@@ -58,23 +62,20 @@ public class InGameSummonerQuerierTest {
     
     
     @Test
-    public void shouldQuerierReportMoreThan5Summoners()() throws Exception {
-        final String summonerName;
+    public void shouldQuerierReportMoreThan5Summoners() throws Exception {
+        final int actualsummonerNumber;
 
-        GIVEN: {
-            summonerName = "heeseong";
-            when(querier.queryGamesummonernumber(summonerName)).thenReturn(10);
+        GIVEN: {            
+            when(querier.queryGamesummonernumber()).thenReturn(10);
         }
-
-        final String actualGameKey;
+        
         WHEN: {
-            actualGameKey = querier.queryGameKey(summonerName);
+        	actualsummonerNumber = querier.queryGamesummonernumber();
             
         }
-
-        final String expectedGameKey = "4/bl4DC8HBir8w7bGHq6hvuHluBd+3xM";
+        final int expectedSummonernumber = 10;
         THEN: {
-            assertThat(actualGameKey, is(expectedGameKey));
+            assertThat(actualsummonerNumber, is(expectedSummonernumber));
         }
     }
 
