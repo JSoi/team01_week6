@@ -22,9 +22,10 @@ import java.util.HashMap;
 /**
  * Created by tchi on 2016. 4. 25..
  */
-public class InGameSummonerQuerier implements InGameSummonerQuerierInterface {
+public class InGameSummonerQuerier{
     private final String apiKey;
     private final GameParticipantListener listener;
+    private int	  summonerNumber;
 
     public InGameSummonerQuerier(String apiKey, GameParticipantListener listener) {
         this.apiKey = apiKey;
@@ -34,7 +35,9 @@ public class InGameSummonerQuerier implements InGameSummonerQuerierInterface {
     /* (non-Javadoc)
 	 * @see cnu.lecture.InGameSummonerQuerierInterface#queryGameKey(java.lang.String)
 	 */
-    @Override
+    public int queryGamesummonernumber(void){
+    	return summonerNumber;
+    }
 	public String queryGameKey(String summonerName) throws IOException {
         HttpClient client = HttpClientBuilder.create().build();
 
@@ -49,7 +52,9 @@ public class InGameSummonerQuerier implements InGameSummonerQuerierInterface {
         HttpResponse inGameResponse = client.execute(inGameRequest);
         Gson inGameGson = new Gson();
         InGameInfo gameInfo = inGameGson.fromJson(new JsonReader(new InputStreamReader(inGameResponse.getEntity().getContent())), InGameInfo.class);
-
+        
+        summonerNumber = gameInfo.length();
+        
         Arrays.asList(gameInfo.getParticipants()).forEach((InGameInfo.Participant participant) -> {
             listener.player(participant.getSummonerName());
         });
