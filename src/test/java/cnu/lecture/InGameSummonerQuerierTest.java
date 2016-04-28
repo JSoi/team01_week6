@@ -73,9 +73,9 @@ public class InGameSummonerQuerierTest {
         	actualsummonerNumber = querier.queryGamesummonernumber();
             
         }
-        final int expectedSummonernumber = 10;
+        final int expectedSummonernumber = 4;
         THEN: {
-            assertThat(actualsummonerNumber, is(expectedSummonernumber));
+            assertTrue(actualsummonerNumber>expectedSummonernumber);
         }
     }
 
